@@ -26,7 +26,7 @@ class CurrencySelect extends Component {
       })
       .then(response => response.json())
       .then(json => this.setState({
-        currencies: json.results
+        currencies: json.results,
       }))
       .catch(error => console.error('Error:', error))
     }
@@ -60,9 +60,9 @@ class CurrencySelect extends Component {
               name: 'code',
               id: 'age-simple',
             }}>
-            <MenuItem value="">
+            {/* <MenuItem value="">
               <em>None</em>
-            </MenuItem>
+            </MenuItem> */}
             {currenciesSorted.map((currency) =>
               <MenuItem
                 key={currency.currencyName}
