@@ -37,7 +37,7 @@ class App extends Component {
   }
 
   onUpdateFromInput = (amount) => {
-    const convertedMoneyAmount = this.convertMoneyAmount(amount);
+    const convertedMoneyAmount = this.convertMoneyAmount(amount, false);
     console.log(convertedMoneyAmount);
 
     this.setState({
@@ -48,16 +48,25 @@ class App extends Component {
 
   onUpdateToInput = (amount) => {
     this.setState({
+      fromInputAmount: this.convertMoneyAmount(amount, true),
       toInputAmount: amount
     })
   };
 
-  convertMoneyAmount = (amount) => {
+  convertMoneyAmount = (amount, reverse) => {
     console.log(`Exhange rate: ${this.state.exchangeRate}, Amount: ${amount}`)
-    return amount * this.state.exchangeRate;
+    let convertedAmount;
+    if (reverse) {
+        convertedAmount = amount / this.state.exchangeRate;
+    } else {
+      convertedAmount = amount * this.state.exchangeRate;
+    }
+
+    return Math.round(convertedAmount * 100) / 100;
   };
 
   getExchangeRate = (query) => {
+    console.log(`Fetching exchangeRate data`);
     fetch(`https://free.currencyconverterapi.com/api/v5/convert?q=${query}&compact=ultra`, {
       method : 'GET'
     })
@@ -76,7 +85,11 @@ class App extends Component {
 
     if (this.state.toCurrency.id) {
       console.log(`Updating exchangeRate: ${currency.id}_${this.state.toCurrency.id}`);
-      this.getExchangeRate(`${currency.id}_${this.state.toCurrency.id}`);
+      this.setState({
+        exchangeRate: this.getExchangeRate(`${currency.id}_${this.state.toCurrency.id}`),
+        fromInputAmount: "",
+        toInputAmount: "",
+      });
     }
   };
 
@@ -88,7 +101,11 @@ class App extends Component {
 
     if (this.state.fromCurrency.id) {
       console.log(`Updating exchangeRate: ${this.state.fromCurrency.id}_${currency.id}`);
-      this.getExchangeRate(`${this.state.fromCurrency.id}_${currency.id}`);
+      this.setState({
+        exchangeRate: this.getExchangeRate(`${this.state.fromCurrency.id}_${currency.id}`),
+        fromInputAmount: "",
+        toInputAmount: "",
+      });
     }
   };
 

@@ -17,16 +17,19 @@ class CurrencySelect extends Component {
   };
 
   componentDidMount() {
-    const url = "https://free.currencyconverterapi.com/api/v5/currencies";
+    if (Object.keys(this.state.currencies).length === 0) {
+      console.log(`Fetching currency data`);
+      const url = "https://free.currencyconverterapi.com/api/v5/currencies";
 
-    fetch(url, {
-      method : 'GET'
-    })
-    .then(response => response.json())
-    .then(json => this.setState({
-      currencies: json.results
-    }))
-    .catch(error => console.error('Error:', error))
+      fetch(url, {
+        method : 'GET'
+      })
+      .then(response => response.json())
+      .then(json => this.setState({
+        currencies: json.results
+      }))
+      .catch(error => console.error('Error:', error))
+    }
   }
 
   handleChange = event => {
