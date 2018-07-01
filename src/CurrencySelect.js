@@ -6,18 +6,31 @@ import { FormControl, InputLabel, Select, MenuItem }  from '@material-ui/core';
 const styles = theme => ({
   formControl: {
     // margin: theme.spacing.unit,
-    minWidth: 240,
+    minWidth: 360,
   },
 });
 
 class CurrencySelect extends Component {
   state = {
-    age: '',
+    code: '',
+    currencies: [],
   };
 
-  
+  componentDidMount() {
+    const url = "https://free.currencyconverterapi.com/api/v5/currencies";
+
+    fetch(url, {
+      method : 'GET'
+    })
+    .then(response => response.json())
+    .then(json => this.setState({
+      currencies: Object.values(json.results)
+    }))
+    .catch(error => console.error('Error:', error))
+  }
 
   handleChange = event => {
+    this.props.onUpdate(event.target.value);
     this.setState({ [event.target.name]: event.target.value });
   };
 
@@ -28,18 +41,18 @@ class CurrencySelect extends Component {
       <FormControl className={classes.formControl}>
           <InputLabel htmlFor="age-simple">{this.props.title}</InputLabel>
           <Select
-            value={this.state.age}
+            value={this.state.code}
             onChange={this.handleChange}
             inputProps={{
-              name: 'age',
+              name: 'code',
               id: 'age-simple',
             }}>
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {this.state.currencies.map(({currencyName, currencySymbol, id}) =>
+              <MenuItem key={id} value={id}>{currencyName} - {id}</MenuItem>
+            )}
           </Select>
       </FormControl>
     );

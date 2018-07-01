@@ -1,26 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { FormControl, Input, InputAdornment }  from '@material-ui/core';
+import { FormControl, Input, InputAdornment, Typography }  from '@material-ui/core';
 
 const styles = theme => ({
   withoutLabel: {
     marginTop: theme.spacing.unit * 3,
-    width: 240,
+    width: 360,
   },
   textField: {
-    fontSize: 64,
-  }
+    fontSize: 72,
+  },
+  typography: {
+    fontSize: 72,
+    color: theme.palette.text.primary,
+  },
 });
 
 class CurrencyInput extends Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    amount: '',
-  };
+    // this.state = {
+    //   amount: '',
+    // }
+  }
 
   handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
+    this.props.onUpdate(event.target.value);
+    this.setState({ [prop]: event.target.value});
   };
 
   render() {
@@ -30,12 +38,16 @@ class CurrencyInput extends Component {
       <FormControl className={classes.withoutLabel}>
         <Input
           id="adornment-weight"
-          value={this.state.amount}
+          value={this.props.amount}
+          type="number"
           className={classes.textField}
-          disableUnderline="true"
-          placeholder="USD"
+          disableUnderline={true}
+          placeholder={this.props.currencyCode}
           onChange={this.handleChange('amount')}
-          startAdornment={<InputAdornment className={classes.textField} position="start">$</InputAdornment>}
+          startAdornment={
+            <InputAdornment position="start">
+              <Typography className={classes.typography}>$</Typography>
+          </InputAdornment>}
           inputProps={{
             'aria-label': 'Weight',
           }}
