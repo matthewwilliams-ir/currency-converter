@@ -28,19 +28,16 @@ class App extends Component {
     super(props);
 
     this.state = {
-      fromCurrencyCode: "",
-      toCurrencyCode: "",
+      fromCurrency: {},
+      toCurrency: {},
       fromInputAmount: "",
       toInputAmount: "",
       exchangeRate: 0,
-      fromCurrencySymbol: "",
-      toCurrencySymbol: "",
     }
   }
 
   onUpdateFromInput = (amount) => {
-    const convertedMoneyAmount = this.convertMoneyAmount(this.state.fromCurrencyCode,
-      this.state.toCurrencyCode, amount);
+    const convertedMoneyAmount = this.convertMoneyAmount(amount);
     console.log(convertedMoneyAmount);
 
     this.setState({
@@ -55,8 +52,7 @@ class App extends Component {
     })
   };
 
-  convertMoneyAmount = (fromCode, toCode, amount) => {
-    // const query = `${fromCode}_${toCode}`;
+  convertMoneyAmount = (amount) => {
     console.log(`Exhange rate: ${this.state.exchangeRate}, Amount: ${amount}`)
     return amount * this.state.exchangeRate;
   };
@@ -72,28 +68,27 @@ class App extends Component {
     .catch(error => console.error('Error:', error));
   }
 
-  onUpdateFromCurrencyCode = (code) => {
-    console.log(code);
+  onUpdateFromCurrency = (currency) => {
+    console.log(currency);
     this.setState({
-      fromCurrencyCode: code
+      fromCurrency: currency,
     });
 
-    if (this.state.toCurrencyCode) {
-      console.log(`Updating exchangeRate: ${code}_${this.state.toCurrencyCode}`);
-      this.getExchangeRate(`${code}_${this.state.toCurrencyCode}`);
+    if (this.state.toCurrency.id) {
+      console.log(`Updating exchangeRate: ${currency.id}_${this.state.toCurrency.id}`);
+      this.getExchangeRate(`${currency.id}_${this.state.toCurrency.id}`);
     }
   };
 
-  onUpdateToCurrencyCode = (code, symbol) => {
-    console.log(code);
+  onUpdateToCurrency = (currency) => {
+    console.log(currency);
     this.setState({
-      toCurrencyCode: code,
-
+      toCurrency: currency,
     });
 
-    if (this.state.fromCurrencyCode) {
-      console.log(`Updating exchangeRate: ${this.state.fromCurrencyCode}_${code}`);
-      this.getExchangeRate(`${this.state.fromCurrencyCode}_${code}`);
+    if (this.state.fromCurrency.id) {
+      console.log(`Updating exchangeRate: ${this.state.fromCurrency.id}_${currency.id}`);
+      this.getExchangeRate(`${this.state.fromCurrency.id}_${currency.id}`);
     }
   };
 
@@ -116,13 +111,13 @@ class App extends Component {
             <CurrencySelect
               className={classes.select}
               title="From"
-              onUpdate={this.onUpdateFromCurrencyCode}/>
+              onUpdate={this.onUpdateFromCurrency}/>
           </Grid>
           <Grid item>
             <CurrencySelect
               className={classes.select}
               title="To"
-              onUpdate={this.onUpdateToCurrencyCode}/>
+              onUpdate={this.onUpdateToCurrency}/>
           </Grid>
         </Grid>
         <Grid container spacing={24} justify="center" alignItems="center">
@@ -130,13 +125,13 @@ class App extends Component {
             <CurrencyInput
               onUpdate={this.onUpdateFromInput}
               amount={this.state.fromInputAmount}
-              currencyCode={this.state.fromCurrencyCode}/>
+              currency={this.state.fromCurrency}/>
           </Grid>
           <Grid item>
             <CurrencyInput
               onUpdate={this.onUpdateToInput}
               amount={this.state.toInputAmount}
-              currencyCode={this.state.toCurrencyCode}/>
+              currency={this.state.toCurrency}/>
           </Grid>
         </Grid>
       </div>

@@ -13,7 +13,7 @@ const styles = theme => ({
 class CurrencySelect extends Component {
   state = {
     code: '',
-    currencies: [],
+    currencies: {},
   };
 
   componentDidMount() {
@@ -24,14 +24,17 @@ class CurrencySelect extends Component {
     })
     .then(response => response.json())
     .then(json => this.setState({
-      currencies: Object.values(json.results)
+      currencies: json.results
     }))
     .catch(error => console.error('Error:', error))
   }
 
   handleChange = event => {
-    this.props.onUpdate(event.target.value);
-    this.setState({ [event.target.name]: event.target.value });
+    const code = event.target.value;
+    console.log(code);
+    console.log(this.state.currencies[code]);
+    this.props.onUpdate(this.state.currencies[code]);
+    this.setState({ code: code });
   };
 
   render() {
@@ -50,8 +53,12 @@ class CurrencySelect extends Component {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {this.state.currencies.map(({currencyName, currencySymbol, id}) =>
-              <MenuItem key={id} value={id}>{currencyName} - {id}</MenuItem>
+            {Object.values(this.state.currencies).map((currency) =>
+              <MenuItem
+                key={currency.currencyName}
+                value={currency.id}>
+                {currency.currencyName} - {currency.id}
+              </MenuItem>
             )}
           </Select>
       </FormControl>

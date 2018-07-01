@@ -34,6 +34,11 @@ class CurrencyInput extends Component {
   render() {
     const { classes } = this.props;
 
+    let symbol = this.props.currency.currencySymbol;
+    if (!symbol) {
+      symbol = this.props.currency.id;
+    }
+
     return (
       <FormControl className={classes.withoutLabel}>
         <Input
@@ -42,11 +47,11 @@ class CurrencyInput extends Component {
           type="number"
           className={classes.textField}
           disableUnderline={true}
-          placeholder={this.props.currencyCode}
+          placeholder={this.props.currency.id}
           onChange={this.handleChange('amount')}
           startAdornment={
             <InputAdornment position="start">
-              <Typography className={classes.typography}>$</Typography>
+              <Typography className={classes.typography}>{symbol}</Typography>
           </InputAdornment>}
           inputProps={{
             'aria-label': 'Weight',
