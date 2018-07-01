@@ -42,6 +42,13 @@ class CurrencySelect extends Component {
 
   render() {
     const { classes } = this.props;
+    const currenciesSorted = Object.values(this.state.currencies).sort((a, b) => {
+      if (a.currencyName < b.currencyName)
+        return -1;
+      if (a.currencyName > b.currencyName)
+        return 1;
+      return 0;
+    });
 
     return (
       <FormControl className={classes.formControl}>
@@ -56,7 +63,7 @@ class CurrencySelect extends Component {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {Object.values(this.state.currencies).map((currency) =>
+            {currenciesSorted.map((currency) =>
               <MenuItem
                 key={currency.currencyName}
                 value={currency.id}>
