@@ -37,18 +37,30 @@ class App extends Component {
   }
 
   onUpdateFromInput = (amount) => {
-    const convertedMoneyAmount = this.convertMoneyAmount(amount, false);
+    let convertedMoneyAmount = this.state.toInputAmount;
+
+    if (Object.keys(this.state.fromCurrency).length !== 0 && Object.keys(this.state.fromCurrency).length !== 0) {
+      convertedMoneyAmount = this.convertMoneyAmount(amount, false);
+    }
     console.log(convertedMoneyAmount);
 
     this.setState({
       fromInputAmount: amount,
       toInputAmount: convertedMoneyAmount
     })
+
   };
 
   onUpdateToInput = (amount) => {
+    let convertedMoneyAmount = this.state.fromInputAmount;
+
+    if (Object.keys(this.state.fromCurrency).length !== 0 && Object.keys(this.state.fromCurrency).length !== 0) {
+      convertedMoneyAmount = this.convertMoneyAmount(amount, true);
+    }
+    console.log(convertedMoneyAmount);
+
     this.setState({
-      fromInputAmount: this.convertMoneyAmount(amount, true),
+      fromInputAmount: convertedMoneyAmount,
       toInputAmount: amount
     })
   };
